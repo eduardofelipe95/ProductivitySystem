@@ -22,16 +22,16 @@ import br.ufal.ic.systemComponents.Status;
 import br.ufal.ic.systemComponents.TypeCollaborator;
 
 public class ProductivitySystem {
-	private CollaboratorRepository<Collaborator> collaboratorRepository;
-	private ResearchProjectRepository<ResearchProject> projectRepository;
-	private OrientationRepository<Orientation> orientationRepository;
-	private PublicationRepository<Publication> publicationRepository;
+	private CollaboratorRepository collaboratorRepository;
+	private ResearchProjectRepository projectRepository;
+	private OrientationRepository orientationRepository;
+	private PublicationRepository publicationRepository;
 	
 	public ProductivitySystem() {
-		this.collaboratorRepository = new CollaboratorRepository<Collaborator>();
-		this.projectRepository = new ResearchProjectRepository<ResearchProject>();
-		this.orientationRepository = new OrientationRepository<Orientation>();
-		this.publicationRepository = new PublicationRepository<Publication>();
+		this.collaboratorRepository = new CollaboratorRepository();
+		this.projectRepository = new ResearchProjectRepository();
+		this.orientationRepository = new OrientationRepository();
+		this.publicationRepository = new PublicationRepository();
 		
 		
 		this.collaboratorRepository.save(new Collaborator(1, "Rodrigo", "rodrigo@ic.ufal.br", TypeCollaborator.TEACHER));
@@ -70,12 +70,6 @@ public class ProductivitySystem {
 		boolean end = false;
 		Scanner scanner = new Scanner(System.in);
 		
-	
-		Collaborator collaborator = new Collaborator(new Integer(0), "ed", "dsd", TypeCollaborator.GRADUATION_STUDENT);
-		collaborator.setType(TypeCollaborator.PHD_STUDENT);
-		if(collaborator.getType() == TypeCollaborator.PHD_STUDENT)
-			System.out.println("deu ceto");
-		
 		while(!end){
 			System.out.println("Digite sua opção:\n" + "1-Adicionar projeto\n" + "2-Adicionar colaborador\n" +
 		"3-Alterar status\n" + "10-Imprimir projetos");
@@ -110,28 +104,28 @@ public class ProductivitySystem {
 		
 	}
 	
-	public CollaboratorRepository<Collaborator> getCollaboratorRepository() {
+	public CollaboratorRepository getCollaboratorRepository() {
 		return collaboratorRepository;
 	}
-	public void setCollaboratorRepository(CollaboratorRepository<Collaborator> collaboratorRepository) {
+	public void setCollaboratorRepository(CollaboratorRepository collaboratorRepository) {
 		this.collaboratorRepository = collaboratorRepository;
 	}
-	public ResearchProjectRepository<ResearchProject> getProjectRepository() {
+	public ResearchProjectRepository getProjectRepository() {
 		return projectRepository;
 	}
-	public void setProjectRepository(ResearchProjectRepository<ResearchProject> projectRepository) {
+	public void setProjectRepository(ResearchProjectRepository projectRepository) {
 		this.projectRepository = projectRepository;
 	}
-	public OrientationRepository<Orientation> getOrientationRepository() {
+	public OrientationRepository getOrientationRepository() {
 		return orientationRepository;
 	}
-	public void setOrientationRepository(OrientationRepository<Orientation> orientationRepository) {
+	public void setOrientationRepository(OrientationRepository orientationRepository) {
 		this.orientationRepository = orientationRepository;
 	}
-	public PublicationRepository<Publication> getPublicationRepository() {
+	public PublicationRepository getPublicationRepository() {
 		return publicationRepository;
 	}
-	public void setPublicationRepository(PublicationRepository<Publication> publicationRepository) {
+	public void setPublicationRepository(PublicationRepository publicationRepository) {
 		this.publicationRepository = publicationRepository;
 	}
 	
@@ -157,7 +151,7 @@ public class ProductivitySystem {
 				
 				input = scanner.nextInt();
 				
-				Collaborator collaborator = (Collaborator)this.collaboratorRepository.findById(new Integer(input));
+				Collaborator collaborator = this.collaboratorRepository.findById(new Integer(input));
 				
 				if(collaborator.getType() != TypeCollaborator.TEACHER){
 					throw new TypeException("**O colaborador não pode criar projeto, ele não é um professor**");
@@ -199,7 +193,7 @@ public class ProductivitySystem {
 				collaborator.getHistoricOfProjects().add(researchProject);
 				this.projectRepository.save(researchProject);
 			}else if(input == 2){
-				Collaborator collaborator = (Collaborator)this.collaboratorRepository.findById(new Integer(input));
+				Collaborator collaborator = this.collaboratorRepository.findById(new Integer(input));
 				
 				if(collaborator.getType() != TypeCollaborator.TEACHER){
 					throw new TypeException("**O colaborador não pode criar projeto, ele não é um professor**");
@@ -244,7 +238,7 @@ public class ProductivitySystem {
 	
 	public void printResearchProject(){
 		
-		ArrayList<ResearchProject> researchProjects = (ArrayList<ResearchProject>)this.projectRepository.findAll(); 
+		ArrayList<ResearchProject> researchProjects = this.projectRepository.findAll(); 
 	
 		for(int i = 0; i < researchProjects.size(); i++){
 			System.out.println(researchProjects.get(i).toString());
@@ -252,7 +246,7 @@ public class ProductivitySystem {
 	}
 	
 	public void printCollaborators(){
-		ArrayList<Collaborator> collaborators = (ArrayList<Collaborator>)this.getCollaboratorRepository().findAll();
+		ArrayList<Collaborator> collaborators = this.getCollaboratorRepository().findAll();
 		
 		for(int i = 0; i < collaborators.size(); i++){
 			System.out.println(collaborators.get(i).toString());

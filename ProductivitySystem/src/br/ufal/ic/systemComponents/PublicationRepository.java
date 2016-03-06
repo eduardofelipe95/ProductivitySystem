@@ -1,11 +1,11 @@
 package br.ufal.ic.systemComponents;
 import java.util.ArrayList;
 
-public class PublicationRepository<E> implements Repository<E>{
-	private ArrayList<E> publications;
+public class PublicationRepository implements Repository<Publication>{
+	private ArrayList<Publication> publications;
 
 	public PublicationRepository() {
-		this.publications = new ArrayList<E>();
+		this.publications = new ArrayList<Publication>();
 	}
 	
 	public boolean isAssociated(Integer idProject){
@@ -21,19 +21,19 @@ public class PublicationRepository<E> implements Repository<E>{
 	}
 	
 	@Override
-	public void save(E element) {
+	public void save(Publication element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(E element) {
+	public void update(Publication element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public E findById(Integer id) {
+	public Publication findById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -45,7 +45,7 @@ public class PublicationRepository<E> implements Repository<E>{
 	}
 
 	@Override
-	public ArrayList<E> findAll() {
+	public ArrayList<Publication> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}

@@ -4,36 +4,36 @@ import java.util.ArrayList;
 import br.ufal.ic.exceptions.CollaboratorNotFound;
 import br.ufal.ic.exceptions.ResearchProjectNotFoundException;
 
-public class ResearchProjectRepository<E> implements Repository<E>{
+public class ResearchProjectRepository implements Repository<ResearchProject>{
 
-	private ArrayList<E> researchProjects;
+	private ArrayList<ResearchProject> researchProjects;
 	
 	public ResearchProjectRepository() {
-		this.researchProjects = new ArrayList<E>();
+		this.researchProjects = new ArrayList<ResearchProject>();
 	}
 	
 	@Override
-	public void save(E element) {
+	public void save(ResearchProject element) {
 		this.researchProjects.add(element);
 		
 	}
 
 	@Override
-	public void update(E element) {
+	public void update(ResearchProject element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public E findById(Integer id) throws Exception {
+	public ResearchProject findById(Integer id) throws Exception {
 		ResearchProject researchProject = null;
 		
 		for(int i = 0; i < this.researchProjects.size(); i++){
-			researchProject = (ResearchProject)this.researchProjects.get(i);
+			researchProject = this.researchProjects.get(i);
 			
 			
 			if(researchProject.getId() == id.intValue()){
-				return (E) researchProject;
+				return researchProject;
 			}
 		}
 		throw new ResearchProjectNotFoundException("**Projeto não encontrado**");
@@ -48,15 +48,15 @@ public class ResearchProjectRepository<E> implements Repository<E>{
 	}
 
 	@Override
-	public ArrayList<E> findAll() {
+	public ArrayList<ResearchProject> findAll() {
 		return this.researchProjects;
 	}
 
-	public ArrayList<E> getResearchProjects() {
+	public ArrayList<ResearchProject> getResearchProjects() {
 		return researchProjects;
 	}
 
-	public void setResearchProjects(ArrayList<E> researchProjects) {
+	public void setResearchProjects(ArrayList<ResearchProject> researchProjects) {
 		this.researchProjects = researchProjects;
 	}
 	

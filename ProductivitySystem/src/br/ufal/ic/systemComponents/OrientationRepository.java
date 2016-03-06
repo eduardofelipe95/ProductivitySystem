@@ -1,24 +1,24 @@
 package br.ufal.ic.systemComponents;
 import java.util.ArrayList;
 
-public class OrientationRepository<E> implements Repository<E>{
+public class OrientationRepository implements Repository<Orientation>{
 	
-	private ArrayList<E> orientation;
+	private ArrayList<Orientation> orientation;
 
 	@Override
-	public void save(E element) {
+	public void save(Orientation element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public void update(E element) {
+	public void update(Orientation element) {
 		// TODO Auto-generated method stub
 		
 	}
 
 	@Override
-	public E findById(Integer id) {
+	public Orientation findById(Integer id) {
 		// TODO Auto-generated method stub
 		return null;
 	}
@@ -30,7 +30,7 @@ public class OrientationRepository<E> implements Repository<E>{
 	}
 
 	@Override
-	public ArrayList<E> findAll() {
+	public ArrayList<Orientation> findAll() {
 		// TODO Auto-generated method stub
 		return null;
 	}

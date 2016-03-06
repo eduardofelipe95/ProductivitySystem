@@ -3,35 +3,35 @@ import java.util.ArrayList;
 
 import br.ufal.ic.exceptions.CollaboratorNotFound;
 
-public class CollaboratorRepository<E> implements Repository<E> {
+public class CollaboratorRepository implements Repository<Collaborator> {
 	
-	private ArrayList<E> collaborators;
+	private ArrayList<Collaborator> collaborators;
 	
 	public CollaboratorRepository() {
-		this.collaborators = new ArrayList<E>();
+		this.collaborators = new ArrayList<Collaborator>();
 	}
 	
 	@Override
-	public void save(E element) {
+	public void save(Collaborator element) {
 		this.collaborators.add(element);
 		
 	}
 
 	@Override
-	public void update(E element) {
+	public void update(Collaborator element) {
 		
 	}
 
 	@Override
-	public E findById(Integer id) throws Exception {
+	public Collaborator findById(Integer id) throws Exception {
 		Collaborator collaborator = null;
 		
 		for(int i = 0; i < this.collaborators.size(); i++){
-			collaborator = (Collaborator)this.collaborators.get(i);
+			collaborator = this.collaborators.get(i);
 			collaborator.getId();
 			
 			if(collaborator.getId() == id.intValue()){
-				return (E) collaborator;
+				return collaborator;
 			}
 		}
 		throw new CollaboratorNotFound("**Colaborador não encontrado**");
@@ -45,8 +45,8 @@ public class CollaboratorRepository<E> implements Repository<E> {
 	}
 
 	@Override
-	public ArrayList<E> findAll() {
-		return this.collaborators;
+	public ArrayList<Collaborator> findAll() {
+		return collaborators;
 	}
 
 }
