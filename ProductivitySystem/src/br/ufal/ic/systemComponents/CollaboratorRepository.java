@@ -1,6 +1,8 @@
 package br.ufal.ic.systemComponents;
 import java.util.ArrayList;
 
+import br.ufal.ic.exceptions.CollaboratorNotFound;
+
 public class CollaboratorRepository<E> implements Repository<E> {
 	
 	private ArrayList<E> collaborators;
@@ -32,7 +34,7 @@ public class CollaboratorRepository<E> implements Repository<E> {
 				return (E) collaborator;
 			}
 		}
-		throw new Exception();
+		throw new CollaboratorNotFound("**Colaborador não encontrado**");
 		
 	}
 

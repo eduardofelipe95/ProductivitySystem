@@ -1,8 +1,15 @@
 package br.ufal.ic.system;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.InputMismatchException;
 import java.util.Scanner;
 
+import br.ufal.ic.exceptions.CollaboratorNotFound;
+import br.ufal.ic.exceptions.ResearchProjectNotFoundException;
+import br.ufal.ic.exceptions.TypeException;
+import br.ufal.ic.exceptions.WrongChoiceException;
 import br.ufal.ic.systemComponents.Collaborator;
 import br.ufal.ic.systemComponents.CollaboratorRepository;
 import br.ufal.ic.systemComponents.Orientation;
@@ -57,19 +64,41 @@ public class ProductivitySystem {
 	
 	}
 	
-	public static void main(String[] args){
+	public static void main(String[] args) throws InputMismatchException{
 		ProductivitySystem productivitySystem = new ProductivitySystem();
+		int id = 0, input;
+		boolean end = false;
+		Scanner scanner = new Scanner(System.in);
 		
-		productivitySystem.createProject(3, "Novo tipo de banco de dados", "5/3/2016", "05/03/2018", "CAPES",
-				2000000, "Contribuir com um método mais rápido de busca", "fadfadfdada", 1);
-		
-		productivitySystem.addCollaborator();
-		productivitySystem.addCollaborator();
-		try{
-			productivitySystem.printListParticipants(productivitySystem.projectRepository.findById(new Integer(1)));
-		}catch(Exception e){
-			e.printStackTrace();
+		while(!end){
+			System.out.println("Digite sua opção:\n" + "1-Adicionar projeto\n" + "2-Adicionar colaborador\n" +
+		"10-Imprimir projetos");
+			try{
+				scanner = new Scanner(System.in);
+				input = scanner.nextInt();
+				
+				if(input == 1){
+					productivitySystem.createProject(new Integer(id));
+					id++;
+				}else if(input == 2){
+					productivitySystem.addCollaborator();
+				}else if(input == 10){
+					productivitySystem.printResearchProject();
+				}else{
+					throw new InputMismatchException();
+				}
+			}catch(InputMismatchException e){
+				System.out.println("**Digite uma opção válida**");
+			}
+			
+			
 		}
+		
+		scanner.close();
+		
+		
+		
+		
 	}
 	
 	public CollaboratorRepository<Collaborator> getCollaboratorRepository() {
@@ -97,25 +126,109 @@ public class ProductivitySystem {
 		this.publicationRepository = publicationRepository;
 	}
 	
-	
-	public void createProject(Integer id, String title, String startDate, String endDate,
-			String fundingAgency,double financedAmount, String objective, String description, Integer idProject){
+	public void createProject(Integer idProject){
 		try{
+			Scanner scanner = new Scanner(System.in);// para inteiros
+			Scanner scanner2 = new Scanner(System.in);//para Strings
+			Scanner scanner3 = new Scanner(System.in);//para double
 			
-			Collaborator collaborator = (Collaborator)this.collaboratorRepository.findById(id);
+			int input, id;
+			double financedAmount;
+			String title, startDate, endDate,fundingAgency, objective, description;
 			
-			if(collaborator.getType() != TypeCollaborator.TEACHER){
-				throw new Exception();
+			System.out.println("Deseja informar as informações básicas do projeto?\n" + "1-Sim\n" + "2-não");
+			input = scanner.nextInt();
+			
+			if(!(input == 1 || input == 2)){
+				throw new WrongChoiceException("Essa opção não existe");
 			}
 			
-			ResearchProject researchProject = new ResearchProject(idProject, title, startDate, endDate,
-					fundingAgency, financedAmount, objective, description, Status.IN_PREPARATION, collaborator);
+			if(input == 1){
+				System.out.println("Digite o id do professor responsável pela criação do projeto");
+				
+				input = scanner.nextInt();
+				
+				Collaborator collaborator = (Collaborator)this.collaboratorRepository.findById(new Integer(input));
+				
+				if(collaborator.getType() != TypeCollaborator.TEACHER){
+					throw new TypeException("**O colaborador não pode criar projeto, ele não é um professor**");
+				}
+				
+				System.out.println("Digite o título do projeto");
+				title = scanner2.nextLine();
+				
+				System.out.println("Digite a data de início no formato dd/mm/aaaa");
+				startDate = scanner2.nextLine();
+				
+				System.out.println("Digite a data de término no formato dd/mm/aaaa");
+				endDate = scanner2.nextLine();
+				
+				SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+				Calendar cal = Calendar.getInstance();
+				cal.setTime(sdf.parse(startDate));
+				
+				SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+				Calendar cal2 = Calendar.getInstance();
+				cal2.setTime(sdf2.parse(endDate));
+				
+				System.out.println("Digite o nome da agência financiadora");
+				fundingAgency = scanner2.nextLine();
+				
+				System.out.println("Digite o valor financiado");
+				financedAmount = scanner3.nextDouble();
+				
+				System.out.println("Digite o objetivo");
+				objective = scanner2.nextLine();
+				
+				System.out.println("Digite a descrição");
+				description = scanner2.nextLine();
+				
+				
+				ResearchProject researchProject = new ResearchProject(idProject, title, cal, cal2,
+						fundingAgency, financedAmount, objective, description, Status.IN_PREPARATION, collaborator);
+
+				collaborator.getHistoricOfProjects().add(researchProject);
+				this.projectRepository.save(researchProject);
+			}else if(input == 2){
+				Collaborator collaborator = (Collaborator)this.collaboratorRepository.findById(new Integer(input));
+				
+				if(collaborator.getType() != TypeCollaborator.TEACHER){
+					throw new TypeException("**O colaborador não pode criar projeto, ele não é um professor**");
+				}
+				
+				ResearchProject researchProject = new ResearchProject(idProject, collaborator,Status.IN_PREPARATION);
+				
+				collaborator.getHistoricOfProjects().add(researchProject);
+				this.projectRepository.save(researchProject);
+				
+			}
 			
-			collaborator.getHistoricOfProjects().add(researchProject);
-			this.projectRepository.save(researchProject);
 			
-		}catch(Exception e){
-			System.out.println("Erro na criação do projeto");
+			
+		}catch (InputMismatchException e) {
+			System.out.println("**Valor inválido**");
+			System.out.println("**Não foi possível criar um projeto**");
+			
+		}catch(WrongChoiceException w){
+			System.out.println(w.getMessage());
+			System.out.println("**Não foi possível criar um projeto**");
+		
+		}catch (TypeException t) {
+			System.out.println(t.getMessage());
+			System.out.println("**Não foi possível criar um projeto**");
+		
+		}catch (ParseException p) {
+			System.out.println("**Data errada**");
+			System.out.println("**Não foi possível criar um projeto**");
+			
+		}
+		catch(CollaboratorNotFound c){
+			System.out.println(c.getMessage());
+			System.out.println("**Não foi possível criar um projeto**");
+			
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
+			System.out.println("**Não foi possível criar um projeto**");
 		}
 		
 	}
@@ -123,7 +236,7 @@ public class ProductivitySystem {
 	public void printResearchProject(){
 		
 		ArrayList<ResearchProject> researchProjects = (ArrayList<ResearchProject>)this.projectRepository.findAll(); 
-		
+	
 		for(int i = 0; i < researchProjects.size(); i++){
 			System.out.println(researchProjects.get(i).toString());
 		}
@@ -165,7 +278,7 @@ public class ProductivitySystem {
 			researchProject.getParticipants().add(collaborator);
 			
 		}catch(Exception e){
-			System.out.println("Colaborador não encontrado ou projeto não encontrado");
+			System.out.println(e.getMessage());
 		}
 		
 	}

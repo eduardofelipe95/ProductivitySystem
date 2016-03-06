@@ -16,23 +16,16 @@ public class ResearchProject {
 	private String description;
 	private ArrayList<Collaborator> participants;
 	
-	public ResearchProject(Integer id, String title, String startDate, String endDate, String fundingAgency
+	public ResearchProject(Integer id, String title, Calendar startDate, Calendar endDate, String fundingAgency
 			, double financedAmount, String objective, String description,Status status, Collaborator collaborator) {
 		
-		try{
-			SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
-			Calendar cal = Calendar.getInstance();
-			cal.setTime(sdf.parse(startDate));
 			
-			SimpleDateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
-			Calendar cal2 = Calendar.getInstance();
-			cal2.setTime(sdf2.parse(endDate));
 			
 			this.id = id;
 			this.title = title;
 			this.status = status;
-			this.startDate = cal;
-			this.endDate = cal2;
+			this.startDate = startDate;
+			this.endDate = endDate;
 			this.fundingAgency = fundingAgency;
 			this.financedAmount = financedAmount;
 			this.objective = objective;
@@ -40,15 +33,21 @@ public class ResearchProject {
 			this.participants = new ArrayList<Collaborator>();
 			
 			this.participants.add(collaborator);
-		}catch(ParseException p){
-			p.printStackTrace();
-		}
+		
 		
 		
 		
 		
 	}
 
+	public ResearchProject(Integer id, Collaborator collaborator, Status status) {
+		this.id = id;
+		this.status = status;
+		this.participants = new ArrayList<Collaborator>();
+		this.participants.add(collaborator);
+		
+	}
+	
 	@Override
 	public String toString() {
 		String string = Integer.toString(this.id.intValue()) + " "+ this.participants.get(0).getName() +" " + this.title + " " + this.objective;

@@ -1,6 +1,9 @@
 package br.ufal.ic.systemComponents;
 import java.util.ArrayList;
 
+import br.ufal.ic.exceptions.CollaboratorNotFound;
+import br.ufal.ic.exceptions.ResearchProjectNotFoundException;
+
 public class ResearchProjectRepository<E> implements Repository<E>{
 
 	private ArrayList<E> researchProjects;
@@ -27,13 +30,13 @@ public class ResearchProjectRepository<E> implements Repository<E>{
 		
 		for(int i = 0; i < this.researchProjects.size(); i++){
 			researchProject = (ResearchProject)this.researchProjects.get(i);
-			researchProject.getId();
+			
 			
 			if(researchProject.getId() == id.intValue()){
 				return (E) researchProject;
 			}
 		}
-		throw new Exception();
+		throw new ResearchProjectNotFoundException("**Projeto não encontrado**");
 		
 		
 	}
