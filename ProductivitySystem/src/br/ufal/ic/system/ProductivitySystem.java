@@ -70,9 +70,15 @@ public class ProductivitySystem {
 		boolean end = false;
 		Scanner scanner = new Scanner(System.in);
 		
+	
+		Collaborator collaborator = new Collaborator(new Integer(0), "ed", "dsd", TypeCollaborator.GRADUATION_STUDENT);
+		collaborator.setType(TypeCollaborator.PHD_STUDENT);
+		if(collaborator.getType() == TypeCollaborator.PHD_STUDENT)
+			System.out.println("deu ceto");
+		
 		while(!end){
 			System.out.println("Digite sua opção:\n" + "1-Adicionar projeto\n" + "2-Adicionar colaborador\n" +
-		"10-Imprimir projetos");
+		"3-Alterar status\n" + "10-Imprimir projetos");
 			try{
 				scanner = new Scanner(System.in);
 				input = scanner.nextInt();
@@ -84,7 +90,10 @@ public class ProductivitySystem {
 					productivitySystem.addCollaborator();
 				}else if(input == 10){
 					productivitySystem.printResearchProject();
-				}else{
+				}else if(input == 3){
+					productivitySystem.changeStatus();
+				}
+				else{
 					throw new InputMismatchException();
 				}
 			}catch(InputMismatchException e){
@@ -275,11 +284,87 @@ public class ProductivitySystem {
 			collaborator = (Collaborator)this.collaboratorRepository.findById(new Integer(id));
 			researchProject = this.projectRepository.findById(new Integer(idProject));
 			
-			researchProject.getParticipants().add(collaborator);
+			if(researchProject.getStatus() == Status.IN_PREPARATION){
+				researchProject.getParticipants().add(collaborator);
+			}else{
+				throw new Exception("**O projeto não está em processo de elaboração**");
+			}
 			
 		}catch(Exception e){
 			System.out.println(e.getMessage());
 		}
 		
 	}
+
+	public void changeStatus(){
+		int input;
+		ArrayList<ResearchProject> listProjects = new ArrayList<ResearchProject>();
+		Scanner scanner = new Scanner(System.in);
+		
+		System.out.println("1-Modificar status para em andamento\n2-Modificar status para concuído");
+		input = scanner.nextInt();
+		
+		if(input == 1){
+			for(int i = 0; i < this.projectRepository.getResearchProjects().size(); i++){
+				if(this.projectRepository.getResearchProjects().get(i).getStatus() == Status.IN_PREPARATION
+						&& projectRepository.getResearchProjects().get(i).containsBasicData()){
+					listProjects.add(this.projectRepository.getResearchProjects().get(i));
+				}
+			}
+			for(int i = 0; i < listProjects.size(); i++){
+				System.out.println(i +"| ->"+ listProjects.get(i).getId());
+			}
+			int  input2;
+			Scanner scanner2 = new Scanner(System.in);
+			if(!listProjects.isEmpty()){
+				System.out.println("Qual projeto você quer editar?");
+				input2 = scanner2.nextInt();
+				
+				if(input2 >= 0 && input2 < listProjects.size()){
+					listProjects.get(input2).setStatus(Status.IN_PROGRESS);
+				}else{
+					System.out.println("**Erro**");
+				}
+				
+				if(listProjects.get(input2).getStatus() == Status.IN_PROGRESS){
+					System.out.println("Deu ceto");
+				}
+			}
+		}else if(input == 2){
+			for(int i = 0; i < this.projectRepository.getResearchProjects().size(); i++){
+				if(this.projectRepository.getResearchProjects().get(i).getStatus() == Status.IN_PROGRESS){
+					listProjects.add(this.projectRepository.getResearchProjects().get(i));
+				}
+			}
+			for(int i = 0; i < listProjects.size(); i++){
+				System.out.println(i +"| ->"+ listProjects.get(i).getId());
+			}
+			
+			if(!listProjects.isEmpty()){
+				int  input2;
+				Scanner scanner2 = new Scanner(System.in);
+				System.out.println("Qual projeto você quer editar?");
+				input2 = scanner2.nextInt();
+				
+				if(input2 >= 0 && input2 < listProjects.size()){
+					if(this.publicationRepository.isAssociated(listProjects.get(input2).getId())){
+						listProjects.get(input2).setStatus(Status.COMPLETED);
+					}else{
+						System.out.println("O projeto não contém nenhuma publicação associada");
+					}
+					
+				}else{
+					System.out.println("**Erro**");
+				}
+				
+				if(listProjects.get(input2).getStatus() == Status.COMPLETED){
+					System.out.println("Deu ceto");
+				}
+			}
+		}
+		
+		
+	}
+	
+	
 }

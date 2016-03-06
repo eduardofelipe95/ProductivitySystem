@@ -4,6 +4,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+import javax.print.attribute.standard.RequestingUserName;
+
 public class ResearchProject {
 	private Integer id;
 	private String title;
@@ -54,6 +56,14 @@ public class ResearchProject {
 		return string;
 	}
 	
+	public Status getStatus() {
+		return status;
+	}
+
+	public void setStatus(Status status) {
+		this.status = status;
+	}
+
 	public Integer getId() {
 		return id;
 	}
@@ -109,5 +119,17 @@ public class ResearchProject {
 		this.participants = participants;
 	}
 	
-	
+	public boolean containsBasicData(){
+		if(this.title != null && this.startDate != null && this.endDate != null && this.description != null 
+				&& this.participants.size() > 1 && this.financedAmount != 0 && this.fundingAgency != null 
+				&& this.objective != null){
+		
+			System.out.println("verdade");
+			return true;
+		
+		}
+		System.out.println("Falso");
+		return false;
+	}
+		
 }

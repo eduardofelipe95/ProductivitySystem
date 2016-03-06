@@ -52,4 +52,14 @@ public class ResearchProjectRepository<E> implements Repository<E>{
 		return this.researchProjects;
 	}
 
+	public ArrayList<E> getResearchProjects() {
+		return researchProjects;
+	}
+
+	public void setResearchProjects(ArrayList<E> researchProjects) {
+		this.researchProjects = researchProjects;
+	}
+	
+	
+
 }
