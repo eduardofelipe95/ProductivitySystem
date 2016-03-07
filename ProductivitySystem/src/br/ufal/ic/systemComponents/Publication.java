@@ -6,7 +6,7 @@ public class Publication extends AcademicProduction{
 	private Integer id;
 	private String title;
 	private String conferenceName;
-	private Calendar yearOfPublication;
+	private int yearOfPublication;
 	private ResearchProject researchProjectAssociaed;
 	private ArrayList<Collaborator> authors;
 	
@@ -38,11 +38,11 @@ public class Publication extends AcademicProduction{
 		this.conferenceName = conferenceName;
 	}
 
-	public Calendar getYearOfPublication() {
+	public int getYearOfPublication() {
 		return yearOfPublication;
 	}
 
-	public void setYearOfPublication(Calendar yearOfPublication) {
+	public void setYearOfPublication(int yearOfPublication) {
 		this.yearOfPublication = yearOfPublication;
 	}
 

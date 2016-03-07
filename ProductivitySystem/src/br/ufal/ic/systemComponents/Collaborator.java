@@ -1,7 +1,7 @@
 package br.ufal.ic.systemComponents;
 import java.util.ArrayList;
 
-public class Collaborator {
+public class Collaborator implements Cloneable{
 	private Integer id;
 	private String name;
 	private String email;
@@ -88,6 +88,11 @@ public class Collaborator {
 		this.academicProduction = academicProduction;
 	}
 	
+	@Override
+	public Collaborator clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		return (Collaborator)super.clone();
+	}
 	
 
 

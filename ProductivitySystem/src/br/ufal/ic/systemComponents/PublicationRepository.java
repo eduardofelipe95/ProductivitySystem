@@ -55,8 +55,7 @@ public class PublicationRepository implements Repository<Publication>{
 
 	@Override
 	public ArrayList<Publication> findAll() {
-		// TODO Auto-generated method stub
-		return null;
+		return this.publications;
 	}
 
 }

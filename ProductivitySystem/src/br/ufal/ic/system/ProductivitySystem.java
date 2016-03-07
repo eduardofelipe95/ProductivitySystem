@@ -1,4 +1,5 @@
 package br.ufal.ic.system;
+import java.lang.reflect.Array;
 import java.text.DateFormat;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -67,13 +68,77 @@ public class ProductivitySystem {
 	
 	public static void main(String[] args) throws InputMismatchException{
 		ProductivitySystem productivitySystem = new ProductivitySystem();
-		int id = 0, input, idPublication = 0;
+		int id = 4, input, idPublication = 0;
 		boolean end = false;
 		Scanner scanner = new Scanner(System.in);
 		
+		DateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+		sdf.setLenient(false);
+		Calendar cal = Calendar.getInstance();
+		try {
+			cal.setTime(sdf.parse("12/12/12"));
+		} catch (ParseException e2) {
+			// TODO Auto-generated catch block
+			e2.printStackTrace();
+		}
+		
+		
+		DateFormat sdf2 = new SimpleDateFormat("dd/MM/yyyy");
+		sdf2.setLenient(false);
+		Calendar cal2 = Calendar.getInstance();
+		try {
+			cal2.setTime(sdf2.parse("12/12/12"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			productivitySystem.projectRepository.save(new ResearchProject(1, "Teste1", cal, cal2, "Capes", 12, "nada", "nada", Status.IN_PREPARATION, productivitySystem.collaboratorRepository.findById(new Integer(1))));
+		} catch (CollaboratorNotFound e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		
+		
+		Calendar cal4 = Calendar.getInstance();
+		
+		try {
+			cal4.setTime(sdf2.parse("12/12/14"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			productivitySystem.projectRepository.save(new ResearchProject(2, "Teste2", cal, cal4, "Capes", 12, "nada", "nada", Status.IN_PREPARATION, productivitySystem.collaboratorRepository.findById(new Integer(1))));
+		} catch (CollaboratorNotFound e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		Calendar cal5 = Calendar.getInstance();
+		try {
+			
+			cal5.setTime(sdf2.parse("12/12/13"));
+		} catch (ParseException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		try {
+			productivitySystem.projectRepository.save(new ResearchProject(3, "Teste3", cal, cal5, "Capes", 12, "nada", "nada", Status.IN_PREPARATION, productivitySystem.collaboratorRepository.findById(new Integer(1))));
+		} catch (CollaboratorNotFound e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
+		
+		System.out.println("****Já existem colaboradores cadastrados e 3 projetos cadastrados, projeto 1, projeto 2 e projeto 3***\n");
+		
 		while(!end){
-			System.out.println("Digite sua opção:\n" + "1-Adicionar projeto\n" +"2-Editar projeto\n" + "3-Adicionar colaborador\n" +
-		"4-Alterar status\n"+ "5-Adicionar produção acadêmica\n"+ "6-Editar publicação" +"8-imprimir orientações\n" +"10-Imprimir projetos");
+			System.out.println("\nDigite sua opção:\n" + "1-Adicionar projeto\n" +"2-Editar projeto\n" + "3-Adicionar colaborador\n" +
+		"4-Alterar status\n"+ "5-Adicionar produção acadêmica\n"+ "6-Editar publicação\n" +"7-consultar\n"+"8-Relatório do sistema\n");
 			try{
 				scanner = new Scanner(System.in);
 				input = scanner.nextInt();
@@ -93,13 +158,9 @@ public class ProductivitySystem {
 				}else if(input == 6){
 					productivitySystem.editPublication();
 				}else if(input == 7){
-					productivitySystem.printPublication();
+					productivitySystem.consultations();
 				}else if(input == 8){
-					productivitySystem.printOrientation();
-				}else if(input == 9){
-					productivitySystem.printListParticipants(productivitySystem.projectRepository.findAll().get(0));
-				}else if(input == 10){
-					productivitySystem.printResearchProject();
+					productivitySystem.report();
 				}else{
 					throw new InputMismatchException();
 				}
@@ -341,12 +402,12 @@ public class ProductivitySystem {
 					}
 				}
 				for(int i = 0; i < listProjects.size(); i++){
-					System.out.println(i +"| ->"+ listProjects.get(i).getId());
+					System.out.println("número do projeto ->" + i +"| id do projeto ->"+ listProjects.get(i).getId());
 				}
 				int  input2;
 				Scanner scanner2 = new Scanner(System.in);
 				if(!listProjects.isEmpty()){
-					System.out.println("Qual projeto você quer editar?");
+					System.out.println("Escolha o número do projeto que você deseja mudar o status");
 					input2 = scanner2.nextInt();
 					
 					if(input2 >= 0 && input2 < listProjects.size() && checkConditionOfUndergraduates(listProjects.get(input2).getParticipants())){
@@ -403,7 +464,6 @@ public class ProductivitySystem {
 			Scanner scanner;
 		try{
 			for(int i = 0; i < collaborators.size(); i++){
-				System.out.println(collaborators.get(i).getName());
 				if(collaborators.get(i).getType() == TypeCollaborator.GRADUATION_STUDENT
 						&& collaborators.get(i).engagedInMoreThanOneProjectInProgress()){
 					
@@ -492,17 +552,12 @@ public class ProductivitySystem {
 				if(conferenceName.length() == 0){
 					throw new Exception("você não digitou nada");
 				}
-				System.out.println("Digie o ano de publicação no formato dd/mm/aaaa");
-				date = scanner2.nextLine();
+				System.out.println("Digie o ano de publicação");
+				Scanner scanner4 = new Scanner(System.in);
+				int year = scanner4.nextInt();
 				
-				DateFormat df = new SimpleDateFormat("dd/MM/yyyy");
-				df.setLenient(false);
-				
-				Calendar cal = Calendar.getInstance();
-				try{
-					cal.setTime(df.parse(date));
-				}catch(ParseException p){
-					throw new Exception("Data inválida");
+				if(year <= 0){
+					throw new Exception("Digite um valor válido");
 				}
 				
 				System.out.println("Digite o id do projeto de pesquisa associado");
@@ -512,7 +567,7 @@ public class ProductivitySystem {
 				
 				if(researchProject.getStatus() != Status.IN_PROGRESS){
 					researchProject = null;
-					System.out.println("A publicação não foi associada ao projeto, ele ainda está em elaboração");
+					System.out.println("A publicação não foi associada ao projeto, ele não está em progresso");
 				}
 				
 				System.out.println("Digite o id do autor");
@@ -529,7 +584,7 @@ public class ProductivitySystem {
 				publication.setId(idPublication);
 				publication.setResearchProjectAssociaed(researchProject);
 				publication.setTitle(title);
-				publication.setYearOfPublication(cal);
+				publication.setYearOfPublication(year);
 				
 				this.publicationRepository.save(publication);
 				collaborator.getAcademicProduction().add(publication);
@@ -695,20 +750,17 @@ public class ProductivitySystem {
 	}
 	public void printPublication(){
 		int id;
-		Scanner scanner = new Scanner(System.in);
-		System.out.println("Digite o id do autor");
-		id = scanner.nextInt();
+		
 		
 		try {
-			ArrayList<Publication> publications = this.collaboratorRepository.findById(new Integer(id)).getAcademicProduction();
+			ArrayList<Publication> publications = this.publicationRepository.findAll();
 			for(int i = 0; i < publications.size(); i++){
-				System.out.println(publications.get(i).getId().intValue());
+				System.out.println(publications.get(i).getId().intValue() + publications.get(i).getTitle());
 			}
 		
 		
-		} catch (CollaboratorNotFound e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (Exception e) {
+			System.out.println(e.getMessage());
 		}
 		
 		
@@ -745,7 +797,7 @@ public class ProductivitySystem {
 				
 				
 			}else{
-				if(publication.getResearchProjectAssociaed() == null){
+				if(publication.getResearchProjectAssociaed() != null){
 					throw new Exception("Já existe um projeto relacionadao");
 				}
 				
@@ -774,4 +826,172 @@ public class ProductivitySystem {
 		}
 			
 	}
+	public void consultations(){
+		int input;
+		Scanner scanner = new Scanner(System.in);
+		
+		
+		try{
+			System.out.println("1-consultar colaborador\n2-consultar projeto");
+			input = scanner.nextInt();
+			
+			if(!(input == 1 || input == 2)){
+				throw new Exception("**Digite uma opção válida**");
+			}
+			
+			if(input == 1){
+				int idCollaborator, n, n2;
+				Collaborator collaborator;
+				ArrayList<Publication> publications;
+				ArrayList<ResearchProject> researchProjects;
+				ArrayList<Publication> publications2 = new ArrayList<Publication>();
+				ArrayList<ResearchProject> researchProjects2 = new ArrayList<ResearchProject>();
+				Collaborator collaborator2;
+				
+				Scanner scanner2 = new Scanner(System.in);
+				
+				System.out.println("Digite o id do colaborador");
+				idCollaborator = scanner2.nextInt();
+				
+				collaborator = this.collaboratorRepository.findById(new Integer(idCollaborator));
+				
+			
+				
+				publications2 = collaborator.getAcademicProduction();
+				publications = (ArrayList<Publication>) publications2.clone();
+				
+				researchProjects2 = collaborator.getHistoricOfProjects();
+				researchProjects = (ArrayList<ResearchProject>) researchProjects2.clone();
+
+				
+				n = researchProjects.size();
+				
+				n2 = 0;
+				System.out.println("Projetos relacionados");
+				int j = 0;
+				for(int i = 0; i < n; i++){
+					for(j = 0; j < researchProjects.size(); j++){
+						if(!researchProjects.get(n2).getEndDate().after(researchProjects.get(j).getEndDate())){
+							n2 = j;
+						}
+					}
+					System.out.println("|Título\t" + researchProjects.get(n2).getTitle() + 
+							" || " + researchProjects.get(n2).getEndDate().getTime());
+					researchProjects.remove(n2);
+					n2 = 0;
+					
+				}
+				
+				System.out.println("Publicações relacionadas\n");
+				
+				n = publications.size();
+				for(int i = 0; i < n; i++){
+					for(j = 0; j < publications.size(); j++){
+						if(publications.get(n2).getYearOfPublication() < publications.get(j).getYearOfPublication()){
+							n2 = j;
+						}
+					}
+					System.out.println("| título\t" + publications.get(n2).getTitle() + "| ano\t" + publications.get(n2).getYearOfPublication() + "|");
+					publications.remove(n2);
+					n2 = 0;
+				}
+				
+				System.out.println();
+				
+			}else{
+				int idProject, n, k, n2;
+				System.out.println("Digite o id do projeto");
+				
+				idProject = scanner.nextInt();
+				
+				ResearchProject researchProject = this.projectRepository.findById(new Integer(idProject));
+				System.out.println("Título: " + researchProject.getTitle() + " Descrição:" + researchProject.getDescription()
+				+ " Valor financiado: "+ researchProject.getFinancedAmount() + 
+				" Agência financeadora:" +researchProject.getFundingAgency() + 
+				" Objetivo:" + researchProject.getObjective() + "\n");
+				
+				ArrayList<Collaborator> collaborators = researchProject.getParticipants();
+				ArrayList<Publication> publications = this.publicationRepository.findAll();
+				ArrayList<Publication> publications2 = new ArrayList<Publication>();
+				
+				
+				for(int i = 0; i < publications.size(); i++){
+					if(publications.get(i).getResearchProjectAssociaed().getId().intValue() == idProject){
+						publications2.add(publications.get(i));
+					}
+				}
+				
+				for(int i = 0; i < collaborators.size(); i++){
+					System.out.print("|" + collaborators.get(i).getName() + " " + 
+				collaborators.get(i).getEmail() + "|\n");
+				}
+				
+				publications = new ArrayList<Publication>();
+				
+				
+				publications2 = (ArrayList<Publication>) publications2.clone();
+				n = publications2.size();
+				n2 = 0;
+				int j = 0;
+				publications = new ArrayList<Publication>();
+				for(int i = 0; i < n; i++){
+					for(j = 0; j < publications2.size(); j++){
+						if(publications2.get(j).getYearOfPublication() > publications2.get(n2).getYearOfPublication()){
+							n2 = j;
+						}
+					}
+					System.out.println("| título\t" + publications2.get(n2).getTitle() + "| ano\t" + publications2.get(n2).getYearOfPublication() + "|");
+					publications2.remove(n2);
+					n2 = 0;
+					
+				}
+				
+				
+				
+				
+				
+				
+			}
+		}catch(InputMismatchException i){
+			System.out.println("**Digite uma opção válida**");
+		}catch(Exception e){
+			System.out.println(e.getMessage());
+		}
+		
+		
+	}
+	
+	public void report(){
+		int inProgress = 0, completed = 0, inPreparation = 0, orientations = 0;
+		
+		System.out.println("Número de collaboradores -> " + this.collaboratorRepository.findAll().size());
+		
+		for(int i = 0; i < this.projectRepository.findAll().size(); i++){
+			if(this.projectRepository.findAll().get(i).getStatus() == Status.IN_PREPARATION){
+				inPreparation++;
+			}else if(this.projectRepository.findAll().get(i).getStatus() == Status.IN_PROGRESS){
+				inProgress++;
+			}else{
+				completed++;
+			}
+		}
+		
+		
+		System.out.println("Número de projetos em elaboração -> " + inProgress);
+		System.out.println("Número de projetos em andamento -> " + inPreparation);
+		System.out.println("Número de projetos concluídos - > " + completed);
+		System.out.println("Número total de projetos -> " + this.projectRepository.findAll().size());
+		
+		
+		for(int i = 0; i < this.orientationRepository.findAll().size(); i++){
+			orientations = this.orientationRepository.findAll().get(i).getStudents().size();
+		}
+		
+		System.out.println("Número de orientações -> " + orientations);
+		
+		System.out.println("Número de publicações ->" + this.publicationRepository.findAll().size());
+		
+	
+	}
+	
 }

@@ -6,7 +6,7 @@ import java.util.Calendar;
 
 import javax.print.attribute.standard.RequestingUserName;
 
-public class ResearchProject {
+public class ResearchProject implements Cloneable{
 	private Integer id;
 	private String title;
 	private Status status;
@@ -124,12 +124,17 @@ public class ResearchProject {
 				&& this.participants.size() > 1 && this.financedAmount != 0 && this.fundingAgency != null 
 				&& this.objective != null){
 		
-			System.out.println("verdade");
 			return true;
 		
 		}
-		System.out.println("Falso");
+		
 		return false;
+	}
+	@Override
+	public ResearchProject clone() throws CloneNotSupportedException {
+		// TODO Auto-generated method stub
+		
+		return (ResearchProject) super.clone();
 	}
 		
 }
