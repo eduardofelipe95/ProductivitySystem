@@ -63,6 +63,33 @@ public class Collaborator {
 	public ArrayList<Publication> getAcademicProduction() {
 		return academicProduction;
 	}
+	
+	public boolean engagedInMoreThanOneProjectInProgress(){
+		int n = 0;
+		
+		for(int i = 0;i < this.historicOfProjects.size() ;i++){
+			if(this.historicOfProjects.get(i).getStatus() == Status.IN_PROGRESS){
+				n++;
+			}
+		}
+		
+		if(n > 0){
+			return true;
+		}
+		
+		return false;
+	}
+
+	public void setHistoricOfProjects(ArrayList<ResearchProject> historicOfProjects) {
+		this.historicOfProjects = historicOfProjects;
+	}
+
+	public void setAcademicProduction(ArrayList<Publication> academicProduction) {
+		this.academicProduction = academicProduction;
+	}
+	
+	
+
 
 	
 	

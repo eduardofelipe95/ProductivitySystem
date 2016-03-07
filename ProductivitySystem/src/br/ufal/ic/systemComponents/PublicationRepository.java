@@ -22,7 +22,7 @@ public class PublicationRepository implements Repository<Publication>{
 	
 	@Override
 	public void save(Publication element) {
-		// TODO Auto-generated method stub
+		this.publications.add(element);
 		
 	}
 
@@ -33,9 +33,18 @@ public class PublicationRepository implements Repository<Publication>{
 	}
 
 	@Override
-	public Publication findById(Integer id) {
-		// TODO Auto-generated method stub
-		return null;
+	public Publication findById(Integer id) throws Exception {
+		Publication publication = null;
+		
+		for(int i = 0; i < this.publications.size(); i++){
+			publication = this.publications.get(i);
+			System.out.println(publication.getId().intValue());
+			
+			if(publication.getId() == id.intValue()){
+				return publication;
+			}
+		}
+		throw new Exception("Publicação não encontrada");
 	}
 
 	@Override

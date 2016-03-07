@@ -9,6 +9,10 @@ public class Publication extends AcademicProduction{
 	private Calendar yearOfPublication;
 	private ResearchProject researchProjectAssociaed;
 	private ArrayList<Collaborator> authors;
+	
+	public Publication() {
+		this.authors = new ArrayList<Collaborator>();
+	}
 
 	public Integer getId() {
 		return id;

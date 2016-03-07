@@ -23,7 +23,7 @@ public class CollaboratorRepository implements Repository<Collaborator> {
 	}
 
 	@Override
-	public Collaborator findById(Integer id) throws Exception {
+	public Collaborator findById(Integer id) throws CollaboratorNotFound {
 		Collaborator collaborator = null;
 		
 		for(int i = 0; i < this.collaborators.size(); i++){
@@ -48,5 +48,7 @@ public class CollaboratorRepository implements Repository<Collaborator> {
 	public ArrayList<Collaborator> findAll() {
 		return collaborators;
 	}
+	
+	
 
 }

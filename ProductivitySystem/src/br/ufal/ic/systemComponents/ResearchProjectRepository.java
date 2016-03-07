@@ -25,7 +25,7 @@ public class ResearchProjectRepository implements Repository<ResearchProject>{
 	}
 
 	@Override
-	public ResearchProject findById(Integer id) throws Exception {
+	public ResearchProject findById(Integer id) throws ResearchProjectNotFoundException {
 		ResearchProject researchProject = null;
 		
 		for(int i = 0; i < this.researchProjects.size(); i++){
@@ -52,9 +52,7 @@ public class ResearchProjectRepository implements Repository<ResearchProject>{
 		return this.researchProjects;
 	}
 
-	public ArrayList<ResearchProject> getResearchProjects() {
-		return researchProjects;
-	}
+	
 
 	public void setResearchProjects(ArrayList<ResearchProject> researchProjects) {
 		this.researchProjects = researchProjects;
